@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-redis-pubsub": "^2.0.0",
     "serialport": "^6.0.4"
   }
 }

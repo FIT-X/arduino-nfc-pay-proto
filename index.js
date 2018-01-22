@@ -7,15 +7,28 @@ const http = require('http');
 const Readline = SerialPort.parsers.Readline;
 // const serial = new SerialPort('/dev/ttyACM0', {
 
-const serial = new SerialPort('/dev/tty.usbmodem1441', {
+const serial = new SerialPort('/dev/tty.usbmodem1451', {
     baudRate: 115200
 });
+
+var NRP = require('node-redis-pubsub');
+
+var config = {
+  port: 6379                        , // Port of your remote Redis server
+  host: '192.168.1.138' , // Redis server host, defaults to 127.0.0.1
+  auth: 'potato'                  , // Password
+  scope: 'swamphacks'                       // Use a scope to prevent two NRPs from sharing messages
+};
+
+var nrp = new NRP(config); // This is the NRP client
+
 
 const parser = serial.pipe(new Readline({ delimiter: '\n' }));
 parser.on('data', function (data) {
     if (data.toString().includes('card')) {
         console.log('card scanned!');
-        sendRequest();
+        nrp.emit('rfid',{});       
+// sendRequest();
     }
 })
 
